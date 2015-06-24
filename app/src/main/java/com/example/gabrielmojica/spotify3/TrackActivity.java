@@ -13,8 +13,12 @@ public class TrackActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_track);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-    }
 
+        Bundle extras = getIntent().getExtras();
+        String artistName = extras.getString("ARTIST_NAME");
+        getSupportActionBar().setSubtitle(artistName);
+
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

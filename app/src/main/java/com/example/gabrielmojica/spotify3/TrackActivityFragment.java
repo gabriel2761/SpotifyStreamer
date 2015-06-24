@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -43,20 +44,15 @@ public class TrackActivityFragment extends Fragment {
 
         Intent intent = getActivity().getIntent();
 
-        if (intent != null && intent.hasExtra(Intent.EXTRA_TEXT)) {
-            String artistId = intent.getStringExtra(Intent.EXTRA_TEXT);
+        if (intent != null) {
+            Bundle extras = intent.getExtras();
+            String artistId = extras.getString("ARTIST_ID");
 
             FetchTracksTask fetchTracksTask = new FetchTracksTask();
             fetchTracksTask.execute(artistId);
         }
 
-        String[] data = {"a" +
-                "b" +
-                "c" +
-                "d" +
-                "e" +
-                "f" +
-                "g"};
+
 
         mTrackAdapter = new TrackAdapter(
                 getActivity(),
@@ -89,7 +85,7 @@ public class TrackActivityFragment extends Fragment {
             TextView textView = (TextView) convertView.findViewById(R.id.textview_trackname);
             ImageView imageView = (ImageView) convertView.findViewById(R.id.imageview_albumimage);
 
-            textView.setText(track.name.toString() + "\n" + track.album.name.toString());
+            textView.setText(track.name + "\n" + track.album.name);
 
             if (!track.album.images.isEmpty()) {
                 Picasso.with(getActivity())
@@ -125,6 +121,9 @@ public class TrackActivityFragment extends Fragment {
 
             if (!tracks.isEmpty()) {
                 mTrackAdapter.addAll(tracks);
+            } else {
+                String message = "Unable to find top tracks";
+                Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
             }
         }
     }

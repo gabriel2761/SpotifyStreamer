@@ -3,5 +3,5 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="artist_text_hint">Search Artist</string>
-    <string name="title_activity_track">TrackActivity</string>
+    <string name="title_activity_track">Top Ten Tracks</string>
 </resources>

@@ -77,8 +77,15 @@ public class MainActivityFragment extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String artistId = mArtistAdapter.getItem(position).id.toString();
-                Intent intent = new Intent(getActivity(), TrackActivity.class).putExtra(Intent.EXTRA_TEXT, artistId);
+                Artist artist = mArtistAdapter.getItem(position);
+
+                Bundle extras = new Bundle();
+                extras.putString("ARTIST_ID", artist.id);
+                extras.putString("ARTIST_NAME", artist.name);
+
+                Intent intent = new Intent(getActivity(), TrackActivity.class);
+
+                intent.putExtras(extras);
                 startActivity(intent);
             }
         });
@@ -135,7 +142,7 @@ public class MainActivityFragment extends Fragment {
             TextView textView = (TextView) convertView.findViewById(R.id.textview_artistname);
             ImageView imageView = (ImageView) convertView.findViewById(R.id.imageview_artistimage);
 
-            textView.setText(artist.name.toString());
+            textView.setText(artist.name);
 
             if (!artist.images.isEmpty()) {
                 Picasso.with(getActivity())
