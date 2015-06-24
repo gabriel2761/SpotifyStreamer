@@ -1,6 +1,7 @@
 package com.example.gabrielmojica.spotify3;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -37,7 +39,7 @@ public class MainActivityFragment extends Fragment {
     }
 
     ArtistAdapter mArtistAdapter;
-    EditText editText;
+    EditText mEditText;
 
 
     @Override
@@ -51,7 +53,6 @@ public class MainActivityFragment extends Fragment {
         int id = item.getItemId();
 
         if (id == R.id.refresh_item) {
-
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -65,7 +66,7 @@ public class MainActivityFragment extends Fragment {
 
         mArtistAdapter = new ArtistAdapter(
                 getActivity(),
-                R.layout.search_item,
+                R.layout.artist_item,
                 R.id.listview_artists,
                 new ArrayList<Artist>()
                 );
@@ -73,9 +74,18 @@ public class MainActivityFragment extends Fragment {
         ListView listView = (ListView) rootView.findViewById(R.id.listview_artists);
         listView.setAdapter(mArtistAdapter);
 
-        editText = (EditText) rootView.findViewById(R.id.editText);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String artistId = mArtistAdapter.getItem(position).id.toString();
+                Intent intent = new Intent(getActivity(), TrackActivity.class).putExtra(Intent.EXTRA_TEXT, artistId);
+                startActivity(intent);
+            }
+        });
 
-        editText.setOnKeyListener(new View.OnKeyListener() {
+        mEditText = (EditText) rootView.findViewById(R.id.editText);
+
+        mEditText.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
@@ -83,7 +93,7 @@ public class MainActivityFragment extends Fragment {
                     dismissKeyboard();
 
                     String artist;
-                    if (!(artist = editText.getText().toString()).equals("")) {
+                    if (!(artist = mEditText.getText().toString()).equals("")) {
                         mArtistAdapter.clear();
                         updateArtist(artist);
                         return true;
@@ -98,7 +108,7 @@ public class MainActivityFragment extends Fragment {
     private void dismissKeyboard() {
         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(
                 Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+        imm.hideSoftInputFromWindow(mEditText.getWindowToken(), 0);
     }
 
     public void updateArtist(String artistName) {
@@ -117,7 +127,7 @@ public class MainActivityFragment extends Fragment {
         public View getView(int position, View convertView, ViewGroup parent) {
 
             if (convertView == null) {
-                convertView = LayoutInflater.from(getContext()).inflate(R.layout.search_item, parent, false);
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.artist_item, parent, false);
             }
 
             Artist artist = getItem(position);
@@ -155,10 +165,9 @@ public class MainActivityFragment extends Fragment {
             if (!artists.isEmpty()) {
                 mArtistAdapter.addAll(artists);
             } else {
-                String message = "Unable to find " + editText.getText().toString();
+                String message = "Unable to find " + mEditText.getText().toString();
                 Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
             }
-
         }
     }
 }

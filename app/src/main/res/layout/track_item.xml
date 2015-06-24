@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/imageview_albumimage"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        />
+
+
+
+    <TextView
+        android:id="@+id/textview_trackname"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:text="TrackSong \nAlbum"
+        android:gravity="center_vertical"
+        android:padding="20dp"
+        />
+
+</LinearLayout>
