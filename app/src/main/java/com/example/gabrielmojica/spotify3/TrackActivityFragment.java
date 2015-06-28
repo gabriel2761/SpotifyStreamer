@@ -103,7 +103,7 @@ public class TrackActivityFragment extends Fragment {
             }
 
             ParcelableTrack track = getItem(position);
-            
+
             holder.textView.setText(track.getName() + "\n" + track.getAlbum());
 
             if (!track.mTrackCover.isEmpty()) {

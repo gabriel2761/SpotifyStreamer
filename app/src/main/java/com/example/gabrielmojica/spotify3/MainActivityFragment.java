@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -30,6 +31,7 @@ import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.SpotifyService;
 import kaaes.spotify.webapi.android.models.Artist;
 import kaaes.spotify.webapi.android.models.ArtistsPager;
+import retrofit.RetrofitError;
 
 
 /**
@@ -169,7 +171,6 @@ public class MainActivityFragment extends Fragment {
             public ArtistParcelable createFromParcel(Parcel in) {
                 return new ArtistParcelable(in);
             }
-
             public ArtistParcelable[] newArray(int size) {
                 return new ArtistParcelable[size];
             }
@@ -182,29 +183,38 @@ public class MainActivityFragment extends Fragment {
             super(context, resource, textViewResourceId, artists);
         }
 
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        class ViewHolder {
+            public TextView textView;
+            public ImageView imageView;
+        }
 
-            if (convertView == null) {
-                convertView = LayoutInflater.from(getContext()).inflate(R.layout.artist_item, parent, false);
+        @Override
+        public View getView(int position, View rowView, ViewGroup parent) {
+
+            ViewHolder viewHolder;
+
+            if (rowView == null) {
+                rowView = LayoutInflater.from(getContext()).inflate(R.layout.artist_item, parent, false);
+                viewHolder = new ViewHolder();
+                viewHolder.textView = (TextView) rowView.findViewById(R.id.textview_artistname);
+                viewHolder.imageView = (ImageView) rowView.findViewById(R.id.imageview_artistimage);
+                rowView.setTag(viewHolder);
+            } else {
+                viewHolder = (ViewHolder) rowView.getTag();
             }
 
             Artist artist = getItem(position);
 
-            TextView textView = (TextView) convertView.findViewById(R.id.textview_artistname);
-            ImageView imageView = (ImageView) convertView.findViewById(R.id.imageview_artistimage);
-
-            textView.setText(artist.name);
+            viewHolder.textView.setText(artist.name);
 
             if (!artist.images.isEmpty()) {
                 Picasso.with(getActivity())
                         .load(artist.images.get(0).url)
                         .resize(100, 100)
                         .centerCrop()
-                        .into(imageView);
+                        .into(viewHolder.imageView);
             }
-
-            return convertView;
+            return rowView;
         }
 
     }
@@ -212,17 +222,22 @@ public class MainActivityFragment extends Fragment {
     protected class FetchArtistTask extends AsyncTask<String, Void, List<Artist>> {
         @Override
         protected List<Artist> doInBackground(String... params) {
-            SpotifyApi api = new SpotifyApi();
-            SpotifyService spotify = api.getService();
-            ArtistsPager results = spotify.searchArtists(params[0]);
-            return results.artists.items;
+            try {
+                SpotifyApi api = new SpotifyApi();
+                SpotifyService spotify = api.getService();
+                ArtistsPager results = spotify.searchArtists(params[0]);
+                return results.artists.items;
+            } catch (RetrofitError e) {
+                Log.e("error",e.getResponse().getBody().toString());
+                return null;
+            }
         }
 
         @Override
         protected void onPostExecute(List<Artist> artists) {
             super.onPostExecute(artists);
 
-            if (!artists.isEmpty()) {
+            if (artists != null || !artists.isEmpty()) {
                 mArtistAdapter.addAll(artists);
             } else {
                 String message = "Unable to find " + mEditText.getText().toString();
