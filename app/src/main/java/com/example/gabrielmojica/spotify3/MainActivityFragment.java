@@ -3,6 +3,8 @@ package com.example.gabrielmojica.spotify3;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -104,7 +106,6 @@ public class MainActivityFragment extends Fragment {
                         return false;
                     }
                 });
-
         return rootView;
     }
 
@@ -122,14 +123,23 @@ public class MainActivityFragment extends Fragment {
     protected class FetchArtistTask extends AsyncTask<String, Void, List<Artist>> {
         @Override
         protected List<Artist> doInBackground(String... params) {
-            try {
-                SpotifyApi api = new SpotifyApi();
-                SpotifyService spotify = api.getService();
-                ArtistsPager results = spotify.searchArtists(params[0]);
-                return results.artists.items;
-            } catch (RetrofitError e) {
-                return null;
+            if (isNetworkAvailable()) {
+                try {
+                    SpotifyApi api = new SpotifyApi();
+                    SpotifyService spotify = api.getService();
+                    ArtistsPager results = spotify.searchArtists(params[0]);
+                    return results.artists.items;
+                } catch (RetrofitError e) {
+                    return null;
+                }
             }
+            return null;
+        }
+        private boolean isNetworkAvailable() {
+            ConnectivityManager connectivityManager
+                    = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+            return activeNetworkInfo != null && activeNetworkInfo.isConnected();
         }
 
         @Override
