@@ -23,6 +23,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.ButterKnife;
 import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.SpotifyService;
 import kaaes.spotify.webapi.android.models.Artist;
@@ -37,10 +38,13 @@ public class MainActivityFragment extends Fragment {
 
     public MainActivityFragment() {
     }
-
-    private ArtistAdapter mArtistAdapter;
-    private SearchView mSearchView;
     private static Toast toast;
+
+    ArtistAdapter mArtistAdapter;
+///    @Bind(R.id.listview_artists)
+    SearchView mSearchView;
+
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -62,6 +66,7 @@ public class MainActivityFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+        ButterKnife.bind(this, rootView);
 
         mArtistAdapter = new ArtistAdapter(
                 getActivity(),

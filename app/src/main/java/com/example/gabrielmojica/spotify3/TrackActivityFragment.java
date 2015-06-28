@@ -23,6 +23,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.SpotifyService;
 import kaaes.spotify.webapi.android.models.Track;
@@ -84,8 +86,12 @@ public class TrackActivityFragment extends Fragment {
         }
 
         class ViewHolder {
-            public TextView textView;
-            public ImageView imageView;
+            @Bind(R.id.textview_trackname) TextView textView;
+            @Bind(R.id.imageview_albumimage) ImageView imageView;
+
+            public ViewHolder(View view) {
+                ButterKnife.bind(this, view);
+            }
         }
 
         @Override
@@ -95,9 +101,7 @@ public class TrackActivityFragment extends Fragment {
 
             if (rowView == null) {
                 rowView = LayoutInflater.from(getContext()).inflate(R.layout.track_item, parent, false);
-                holder = new ViewHolder();
-                holder.textView = (TextView) rowView.findViewById(R.id.textview_trackname);
-                holder.imageView = (ImageView) rowView.findViewById(R.id.imageview_albumimage);
+                holder = new ViewHolder(rowView);
                 rowView.setTag(holder);
             } else {
                 holder = (ViewHolder) rowView.getTag();
