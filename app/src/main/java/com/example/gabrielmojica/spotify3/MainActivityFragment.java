@@ -175,8 +175,8 @@ public class MainActivityFragment extends Fragment {
         }
 
         class ViewHolder {
-            public TextView textView;
-            public ImageView imageView;
+            TextView textView;
+            ImageView imageView;
         }
 
         @Override
@@ -233,6 +233,8 @@ public class MainActivityFragment extends Fragment {
                 } else {
                     mArtistAdapter.addAll(artists);
                 }
+            } else {
+                showToast("Search Error Occurred");
             }
         }
 
