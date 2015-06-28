@@ -41,17 +41,23 @@ public class MainActivityFragment extends Fragment {
 
     @Bind(R.id.search_artist) SearchView mSearchView;
     ArtistAdapter mArtistAdapter;
-    ArrayList<ParcelableArtist> artistList = new ArrayList<>();
+    ArrayList<ParcelableArtist> mArtistList = new ArrayList<>();
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList("artists", mArtistList);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
     }
 
     @Override public void onDestroyView() {
@@ -70,8 +76,13 @@ public class MainActivityFragment extends Fragment {
                 getActivity(),
                 R.layout.artist_item,
                 R.id.listview_artists,
-                artistList
+                mArtistList
                 );
+
+        if (savedInstanceState != null) {
+            mArtistList = savedInstanceState.getParcelableArrayList("artists");
+            mArtistAdapter.addAll(mArtistList);
+        }
 
         ListView listView = (ListView) rootView.findViewById(R.id.listview_artists);
         listView.setAdapter(mArtistAdapter);
@@ -147,10 +158,10 @@ public class MainActivityFragment extends Fragment {
             if (artists != null) {
                 mArtistAdapter.clear();
                 if (!artists.isEmpty()) {
-
                     for (Artist artist : artists) {
-                        mArtistAdapter.addAll(new ParcelableArtist(artist));
+                        mArtistList.add(new ParcelableArtist(artist));
                     }
+                    mArtistAdapter.addAll(mArtistList);
                 } else {
                     showToast("Unable to find " + mSearchView.getQuery());
                 }
