@@ -82,27 +82,38 @@ public class TrackActivityFragment extends Fragment {
             super(context, resource);
         }
 
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        class ViewHolder {
+            public TextView textView;
+            public ImageView imageView;
+        }
 
-            if (convertView == null) {
-                convertView = LayoutInflater.from(getContext()).inflate(R.layout.track_item, parent, false);
+        @Override
+        public View getView(int position, View rowView, ViewGroup parent) {
+
+            ViewHolder holder;
+
+            if (rowView == null) {
+                rowView = LayoutInflater.from(getContext()).inflate(R.layout.track_item, parent, false);
+                holder = new ViewHolder();
+                holder.textView = (TextView) rowView.findViewById(R.id.textview_trackname);
+                holder.imageView = (ImageView) rowView.findViewById(R.id.imageview_albumimage);
+                rowView.setTag(holder);
+            } else {
+                holder = (ViewHolder) rowView.getTag();
             }
 
             ParcelableTrack track = getItem(position);
-            TextView textView = (TextView) convertView.findViewById(R.id.textview_trackname);
-            ImageView imageView = (ImageView) convertView.findViewById(R.id.imageview_albumimage);
-
-            textView.setText(track.getName() + "\n" + track.getAlbum());
+            
+            holder.textView.setText(track.getName() + "\n" + track.getAlbum());
 
             if (!track.mTrackCover.isEmpty()) {
                 Picasso.with(getActivity())
                         .load(track.getCover())
                         .resize(100, 100)
                         .centerCrop()
-                        .into(imageView);
+                        .into(holder.imageView);
             }
-            return convertView;
+            return rowView;
         }
     }
 
