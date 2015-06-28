@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.gabrielmojica.spotify3.Parcelables.ParcelableArtist;
 import com.example.gabrielmojica.spotify3.R;
 import com.squareup.picasso.Picasso;
 
@@ -15,14 +16,13 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import kaaes.spotify.webapi.android.models.Artist;
 
 /**
  * Created by gabrielmojica on 29/06/2015.
  */
-public class ArtistAdapter extends ArrayAdapter<Artist> {
+public class ArtistAdapter extends ArrayAdapter<ParcelableArtist> {
 
-    public ArtistAdapter(Context context, int resource, int textViewResourceId, List<Artist> artists) {
+    public ArtistAdapter(Context context, int resource, int textViewResourceId, List<ParcelableArtist> artists) {
         super(context, resource, textViewResourceId, artists);
     }
 
@@ -50,13 +50,13 @@ public class ArtistAdapter extends ArrayAdapter<Artist> {
             viewHolder = (ViewHolder) rowView.getTag();
         }
 
-        Artist artist = getItem(position);
+        ParcelableArtist artist = getItem(position);
 
         viewHolder.textView.setText(artist.name);
 
-        if (!artist.images.isEmpty()) {
+        if (!artist.image.isEmpty()) {
             Picasso.with(getContext())
-                    .load(artist.images.get(0).url)
+                    .load(artist.image)
                     .resize(100, 100)
                     .centerCrop()
                     .into(viewHolder.imageView);

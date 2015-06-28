@@ -31,9 +31,6 @@ import retrofit.RetrofitError;
  */
 public class TrackActivityFragment extends Fragment {
 
-    public TrackActivityFragment() {
-    }
-
     private TrackAdapter mTrackAdapter;
     private ArrayList<ParcelableTrack> mTrackList = new ArrayList<>();
 

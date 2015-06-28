@@ -19,6 +19,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.gabrielmojica.spotify3.Adapters.ArtistAdapter;
+import com.example.gabrielmojica.spotify3.Parcelables.ParcelableArtist;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,13 +37,11 @@ import retrofit.RetrofitError;
  * A placeholder fragment containing a simple view.
  */
 public class MainActivityFragment extends Fragment {
-
-    public MainActivityFragment() {
-    }
     private static Toast toast;
 
-    ArtistAdapter mArtistAdapter;
     @Bind(R.id.search_artist) SearchView mSearchView;
+    ArtistAdapter mArtistAdapter;
+    ArrayList<ParcelableArtist> artistList = new ArrayList<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -71,7 +70,7 @@ public class MainActivityFragment extends Fragment {
                 getActivity(),
                 R.layout.artist_item,
                 R.id.listview_artists,
-                new ArrayList<Artist>()
+                artistList
                 );
 
         ListView listView = (ListView) rootView.findViewById(R.id.listview_artists);
@@ -80,7 +79,7 @@ public class MainActivityFragment extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Artist artist = mArtistAdapter.getItem(position);
+                ParcelableArtist artist = mArtistAdapter.getItem(position);
 
                 Bundle extras = new Bundle();
                 extras.putString("ARTIST_ID", artist.id);
@@ -148,7 +147,10 @@ public class MainActivityFragment extends Fragment {
             if (artists != null) {
                 mArtistAdapter.clear();
                 if (!artists.isEmpty()) {
-                    mArtistAdapter.addAll(artists);
+
+                    for (Artist artist : artists) {
+                        mArtistAdapter.addAll(new ParcelableArtist(artist));
+                    }
                 } else {
                     showToast("Unable to find " + mSearchView.getQuery());
                 }

@@ -33,9 +33,6 @@ public class ParcelableTrack implements Parcelable {
     }
 
     public ParcelableTrack(Parcel in) {
-        mTrackName = in.readString();
-        mTrackAlbum = in.readString();
-        mTrackCover = in.readString();
     }
 
     @Override
