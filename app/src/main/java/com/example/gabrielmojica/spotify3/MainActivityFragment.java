@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -38,14 +40,27 @@ public class MainActivityFragment extends Fragment {
     public MainActivityFragment() {
     }
 
-    ArtistAdapter mArtistAdapter;
-    EditText mEditText;
-
+    private ArtistAdapter mArtistAdapter;
+    private EditText mEditText;
+    private ArrayList<ArtistParcelable> list;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
+        if (savedInstanceState == null) {
+
+        } else {
+            list = savedInstanceState.getParcelableArrayList("key");
+        }
+
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putParcelableArrayList("key", list);
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -123,11 +138,48 @@ public class MainActivityFragment extends Fragment {
         fetchMusic.execute(artistName);
     }
 
+    public static class ArtistParcelable implements Parcelable {
+        private String artistName = null;
+        private String artistImage = null;
+
+        public ArtistParcelable(Artist artist) {
+            this.artistName = artist.name;
+            if (!artist.images.isEmpty()) {
+                this.artistImage = artist.images.get(0).url;
+            }
+        }
+
+        public ArtistParcelable(Parcel in) {
+            artistName = in.readString();
+            artistImage = in.readString();
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeString(artistName);
+            dest.writeString(artistImage);
+        }
+
+        public static final Parcelable.Creator<ArtistParcelable> CREATOR = new Parcelable.Creator<ArtistParcelable>() {
+            public ArtistParcelable createFromParcel(Parcel in) {
+                return new ArtistParcelable(in);
+            }
+
+            public ArtistParcelable[] newArray(int size) {
+                return new ArtistParcelable[size];
+            }
+        };
+    }
 
     public class ArtistAdapter extends ArrayAdapter<Artist> {
 
-        public ArtistAdapter(Context context, int resource, int textViewResourceId, List<Artist> objects) {
-            super(context, resource, textViewResourceId, objects);
+        public ArtistAdapter(Context context, int resource, int textViewResourceId, List<Artist> artists) {
+            super(context, resource, textViewResourceId, artists);
         }
 
         @Override
@@ -154,6 +206,7 @@ public class MainActivityFragment extends Fragment {
 
             return convertView;
         }
+
     }
 
     protected class FetchArtistTask extends AsyncTask<String, Void, List<Artist>> {
