@@ -51,7 +51,6 @@ public class MainActivityFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-
         if (id == R.id.refresh_item) {
             return true;
         }
@@ -101,9 +100,7 @@ public class MainActivityFragment extends Fragment {
                     }
                     @Override
                     public boolean onQueryTextChange(String newText) {
-                        if (!newText.isEmpty())
-                            mArtistAdapter.clear();
-                            updateArtist(newText);
+                        updateArtist(newText);
                         return false;
                     }
                 });
@@ -121,7 +118,7 @@ public class MainActivityFragment extends Fragment {
         FetchArtistTask fetchMusic = new FetchArtistTask();
         fetchMusic.execute(artistName);
     }
-    
+
     public class ArtistAdapter extends ArrayAdapter<Artist> {
 
         public ArtistAdapter(Context context, int resource, int textViewResourceId, List<Artist> artists) {
@@ -180,15 +177,13 @@ public class MainActivityFragment extends Fragment {
         @Override
         protected void onPostExecute(List<Artist> artists) {
             super.onPostExecute(artists);
-
             if (artists != null) {
-                if (artists.isEmpty()) {
-                    showToast("Unable to find " + mSearchView.getQuery().toString());
-                } else {
+                mArtistAdapter.clear();
+                if (!artists.isEmpty()) {
                     mArtistAdapter.addAll(artists);
+                } else {
+                    showToast("Unable to find " + mSearchView.getQuery());
                 }
-            } else {
-                showToast("Search Error Occurred");
             }
         }
 
