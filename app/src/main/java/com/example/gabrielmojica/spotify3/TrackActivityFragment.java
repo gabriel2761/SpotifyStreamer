@@ -27,6 +27,7 @@ import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.SpotifyService;
 import kaaes.spotify.webapi.android.models.Track;
 import kaaes.spotify.webapi.android.models.Tracks;
+import retrofit.RetrofitError;
 
 
 /**
@@ -174,24 +175,27 @@ public class TrackActivityFragment extends Fragment {
 
         @Override
         protected List<Track> doInBackground(String... params) {
-            // TODO add a try and catch
-            SpotifyApi spotifyApi = new SpotifyApi();
-            SpotifyService spotifyService = spotifyApi.getService();
-            Map<String, Object> options = new HashMap<>();
-            options.put("country", "US");
-            Tracks tracks = spotifyService.getArtistTopTrack(params[0], options);
-            return tracks.tracks;
+            try {
+                SpotifyApi spotifyApi = new SpotifyApi();
+                SpotifyService spotifyService = spotifyApi.getService();
+                Map<String, Object> options = new HashMap<>();
+                options.put("country", "US");
+                Tracks tracks = spotifyService.getArtistTopTrack(params[0], options);
+                return tracks.tracks;
+            } catch (RetrofitError e) {
+                return null;
+            }
+
         }
 
         @Override
         protected void onPostExecute(List<Track> tracks) {
             super.onPostExecute(tracks);
-            if (!tracks.isEmpty()) {
+            if (tracks != null) {
                 for (Track track : tracks) {
                     mTrackList.add(new ParcelableTrack(track));
                 }
                 mTrackAdapter.addAll(mTrackList);
-
             } else {
                 String message = "Unable to find top tracks";
                 Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
