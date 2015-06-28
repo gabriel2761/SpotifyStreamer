@@ -198,15 +198,24 @@ public class TrackActivityFragment extends Fragment {
         @Override
         protected void onPostExecute(List<Track> tracks) {
             super.onPostExecute(tracks);
-            if (tracks != null) {
-                for (Track track : tracks) {
-                    mTrackList.add(new ParcelableTrack(track));
-                }
-                mTrackAdapter.addAll(mTrackList);
+            if (tracks == null) {
+                showToastError("Unable to find top tracks");
+            } else if (tracks.isEmpty()){
+                showToastError("No top tracks for this Artist");
             } else {
-                String message = "Unable to find top tracks";
-                Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                addTracks(tracks);
             }
+        }
+
+        private void addTracks(List<Track> tracks) {
+            for (Track track : tracks) {
+                mTrackList.add(new ParcelableTrack(track));
+            }
+            mTrackAdapter.addAll(mTrackList);
+        }
+
+        private void showToastError(String message) {
+            Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();;
         }
     }
 }
