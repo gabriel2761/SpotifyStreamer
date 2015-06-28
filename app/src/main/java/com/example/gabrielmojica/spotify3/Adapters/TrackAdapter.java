@@ -56,11 +56,11 @@ public class TrackAdapter extends ArrayAdapter<ParcelableTrack> {
 
         ParcelableTrack track = getItem(position);
 
-        holder.textView.setText(track.getName() + "\n" + track.getAlbum());
+        holder.textView.setText(track.name + "\n" + track.album);
 
-        if (!track.getAlbum().isEmpty()) {
+        if (!track.album.isEmpty()) {
             Picasso.with(trackActivityFragment.getActivity())
-                    .load(track.getCover())
+                    .load(track.image)
                     .resize(100, 100)
                     .centerCrop()
                     .into(holder.imageView);
