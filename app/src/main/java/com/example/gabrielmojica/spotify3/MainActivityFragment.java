@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
-import android.view.KeyEvent;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,7 +15,6 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -42,8 +41,9 @@ public class MainActivityFragment extends Fragment {
     }
 
     private ArtistAdapter mArtistAdapter;
-    private EditText mEditText;
+    private SearchView mSearchView;
     private ArrayList<ArtistParcelable> list;
+    private static Toast toast;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -106,32 +106,31 @@ public class MainActivityFragment extends Fragment {
             }
         });
 
-        mEditText = (EditText) rootView.findViewById(R.id.editText);
+        mSearchView = (SearchView) rootView.findViewById(R.id.search_artist);
 
-        mEditText.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
-                        (keyCode == KeyEvent.KEYCODE_ENTER)) {
-                    dismissKeyboard();
-
-                    String artist;
-                    if (!(artist = mEditText.getText().toString()).equals("")) {
-                        mArtistAdapter.clear();
-                        updateArtist(artist);
+        mSearchView.setOnQueryTextListener(
+                new SearchView.OnQueryTextListener() {
+                    @Override
+                    public boolean onQueryTextSubmit(String query) {
+                        dismissKeyboard();
                         return true;
                     }
-                }
-                return false;
-            }
-        });
+                    @Override
+                    public boolean onQueryTextChange(String newText) {
+                        if (!newText.isEmpty())
+                            mArtistAdapter.clear();
+                            updateArtist(newText);
+                        return false;
+                    }
+                });
+
         return rootView;
     }
 
     private void dismissKeyboard() {
         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(
                 Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(mEditText.getWindowToken(), 0);
+        imm.hideSoftInputFromWindow(mSearchView.getWindowToken(), 0);
     }
 
     public void updateArtist(String artistName) {
@@ -142,13 +141,6 @@ public class MainActivityFragment extends Fragment {
     public static class ArtistParcelable implements Parcelable {
         private String artistName = null;
         private String artistImage = null;
-
-        public ArtistParcelable(Artist artist) {
-            this.artistName = artist.name;
-            if (!artist.images.isEmpty()) {
-                this.artistImage = artist.images.get(0).url;
-            }
-        }
 
         public ArtistParcelable(Parcel in) {
             artistName = in.readString();
@@ -237,17 +229,19 @@ public class MainActivityFragment extends Fragment {
 
             if (artists != null) {
                 if (artists.isEmpty()) {
-                    showToast("Unable to find " + mEditText.getText().toString());
+                    showToast("Unable to find " + mSearchView.getQuery().toString());
                 } else {
                     mArtistAdapter.addAll(artists);
                 }
-            } else {
-                showToast("Search Error Occurred");
             }
         }
 
         private void showToast(String message) {
-            Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+            if (toast != null) {
+                toast.cancel();
+            }
+            toast = Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT);
+            toast.show();
         }
 
     }

@@ -160,7 +160,6 @@ public class TrackActivityFragment extends Fragment {
             return 0;
         }
 
-
         public static final Parcelable.Creator<ParcelableTrack> CREATOR = new Parcelable.Creator<ParcelableTrack>() {
             public ParcelableTrack createFromParcel(Parcel in) {
                 return new ParcelableTrack(in);
@@ -185,7 +184,6 @@ public class TrackActivityFragment extends Fragment {
             } catch (RetrofitError e) {
                 return null;
             }
-
         }
 
         @Override
