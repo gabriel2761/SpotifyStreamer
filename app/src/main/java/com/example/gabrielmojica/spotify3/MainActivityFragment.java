@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -228,7 +227,6 @@ public class MainActivityFragment extends Fragment {
                 ArtistsPager results = spotify.searchArtists(params[0]);
                 return results.artists.items;
             } catch (RetrofitError e) {
-                Log.e("error",e.getResponse().getBody().toString());
                 return null;
             }
         }
@@ -237,12 +235,20 @@ public class MainActivityFragment extends Fragment {
         protected void onPostExecute(List<Artist> artists) {
             super.onPostExecute(artists);
 
-            if (artists != null || !artists.isEmpty()) {
-                mArtistAdapter.addAll(artists);
+            if (artists != null) {
+                if (artists.isEmpty()) {
+                    showToast("Unable to find " + mEditText.getText().toString());
+                } else {
+                    mArtistAdapter.addAll(artists);
+                }
             } else {
-                String message = "Unable to find " + mEditText.getText().toString();
-                Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                showToast("Search Error Occurred");
             }
         }
+
+        private void showToast(String message) {
+            Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+        }
+
     }
 }
