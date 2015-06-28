@@ -1,5 +1,6 @@
 package com.example.gabrielmojica.spotify3;
 
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -12,13 +13,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.squareup.picasso.Picasso;
+import com.example.gabrielmojica.spotify3.Adapters.ArtistAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -121,50 +119,6 @@ public class MainActivityFragment extends Fragment {
         fetchMusic.execute(artistName);
     }
 
-    public class ArtistAdapter extends ArrayAdapter<Artist> {
-
-        public ArtistAdapter(Context context, int resource, int textViewResourceId, List<Artist> artists) {
-            super(context, resource, textViewResourceId, artists);
-        }
-
-        class ViewHolder {
-            @Bind(R.id.textview_artistname) TextView textView;
-            @Bind(R.id.imageview_artistimage) ImageView imageView;
-
-            public ViewHolder(View view) {
-                ButterKnife.bind(this, view);
-            }
-        }
-
-        @Override
-        public View getView(int position, View rowView, ViewGroup parent) {
-
-            ViewHolder viewHolder;
-
-            if (rowView == null) {
-                rowView = LayoutInflater.from(getContext()).inflate(R.layout.artist_item, parent, false);
-                viewHolder = new ViewHolder(rowView);
-                rowView.setTag(viewHolder);
-            } else {
-                viewHolder = (ViewHolder) rowView.getTag();
-            }
-
-            Artist artist = getItem(position);
-
-            viewHolder.textView.setText(artist.name);
-
-            if (!artist.images.isEmpty()) {
-                Picasso.with(getActivity())
-                        .load(artist.images.get(0).url)
-                        .resize(100, 100)
-                        .centerCrop()
-                        .into(viewHolder.imageView);
-            }
-            return rowView;
-        }
-
-    }
-
     protected class FetchArtistTask extends AsyncTask<String, Void, List<Artist>> {
         @Override
         protected List<Artist> doInBackground(String... params) {
@@ -200,4 +154,5 @@ public class MainActivityFragment extends Fragment {
         }
 
     }
+
 }
