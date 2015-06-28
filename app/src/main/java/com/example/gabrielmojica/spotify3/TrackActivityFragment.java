@@ -79,6 +79,11 @@ public class TrackActivityFragment extends Fragment {
         super.onSaveInstanceState(outState);
     }
 
+    @Override public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
+    }
+
     public class TrackAdapter extends ArrayAdapter<ParcelableTrack> {
 
         public TrackAdapter(Context context, int track_item, int resource, List<ParcelableTrack> tracks) {

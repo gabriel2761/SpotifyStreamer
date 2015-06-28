@@ -42,7 +42,7 @@ public class MainActivityFragment extends Fragment {
     private static Toast toast;
 
     ArtistAdapter mArtistAdapter;
-    SearchView mSearchView;
+    @Bind(R.id.search_artist) SearchView mSearchView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -57,6 +57,11 @@ public class MainActivityFragment extends Fragment {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
     }
 
     @Override
@@ -91,8 +96,6 @@ public class MainActivityFragment extends Fragment {
                 startActivity(intent);
             }
         });
-
-        mSearchView = (SearchView) rootView.findViewById(R.id.search_artist);
 
         mSearchView.setOnQueryTextListener(
                 new SearchView.OnQueryTextListener() {
