@@ -23,6 +23,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
 import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.SpotifyService;
@@ -41,10 +42,7 @@ public class MainActivityFragment extends Fragment {
     private static Toast toast;
 
     ArtistAdapter mArtistAdapter;
-///    @Bind(R.id.listview_artists)
     SearchView mSearchView;
-
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -131,8 +129,12 @@ public class MainActivityFragment extends Fragment {
         }
 
         class ViewHolder {
-            TextView textView;
-            ImageView imageView;
+            @Bind(R.id.textview_artistname) TextView textView;
+            @Bind(R.id.imageview_artistimage) ImageView imageView;
+
+            public ViewHolder(View view) {
+                ButterKnife.bind(this, view);
+            }
         }
 
         @Override
@@ -142,9 +144,7 @@ public class MainActivityFragment extends Fragment {
 
             if (rowView == null) {
                 rowView = LayoutInflater.from(getContext()).inflate(R.layout.artist_item, parent, false);
-                viewHolder = new ViewHolder();
-                viewHolder.textView = (TextView) rowView.findViewById(R.id.textview_artistname);
-                viewHolder.imageView = (ImageView) rowView.findViewById(R.id.imageview_artistimage);
+                viewHolder = new ViewHolder(rowView);
                 rowView.setTag(viewHolder);
             } else {
                 viewHolder = (ViewHolder) rowView.getTag();
