@@ -16,7 +16,12 @@ public class ParcelableTrack implements Parcelable {
     public ParcelableTrack(Track track) {
         name = track.name;
         album = track.album.name;
-        image = track.album.images.get(0).url;
+        if (!track.album.images.isEmpty()) {
+            image = track.album.images.get(0).url;
+        } else {
+            image = "";
+        }
+
     }
 
     public ParcelableTrack(Parcel in) {
