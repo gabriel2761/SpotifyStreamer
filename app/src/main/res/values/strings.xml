@@ -5,4 +5,8 @@
     <string name="artist_text_hint">Search Artist</string>
     <string name="title_activity_track">Top Ten Tracks</string>
     <string name="query_hint_artist">Search Artist</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_player">PlayerActivity</string>
 </resources>

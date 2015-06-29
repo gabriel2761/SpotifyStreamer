@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -61,6 +62,25 @@ public class TrackActivityFragment extends Fragment {
         ListView listView = (ListView) view.findViewById(R.id.track_listView);
         listView.setAdapter(mTrackAdapter);
 
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ParcelableTrack track = mTrackAdapter.getItem(position);
+
+                Bundle bundle = new Bundle();
+                bundle.putString("TRACK_ARTIST", track.artist);
+                bundle.putString("TRACK_NAME", track.name);
+                bundle.putString("TRACK_ALBUM", track.album);
+                bundle.putString("TRACK_PREVIEW", track.preview);
+                bundle.putString("TRACK_IMAGE", track.image);
+
+                Intent intent = new Intent(getActivity(), PlayerActivity.class);
+
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+        });
+
         return view;
     }
 
@@ -111,7 +131,7 @@ public class TrackActivityFragment extends Fragment {
         }
 
         private void showToastError(String message) {
-            Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();;
+            Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
         }
     }
 }

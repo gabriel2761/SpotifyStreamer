@@ -92,13 +92,13 @@ public class MainActivityFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ParcelableArtist artist = mArtistAdapter.getItem(position);
 
-                Bundle extras = new Bundle();
-                extras.putString("ARTIST_ID", artist.id);
-                extras.putString("ARTIST_NAME", artist.name);
+                Bundle bundle = new Bundle();
+                bundle.putString("ARTIST_ID", artist.id);
+                bundle.putString("ARTIST_NAME", artist.name);
 
                 Intent intent = new Intent(getActivity(), TrackActivity.class);
 
-                intent.putExtras(extras);
+                intent.putExtras(bundle);
                 startActivity(intent);
             }
         });

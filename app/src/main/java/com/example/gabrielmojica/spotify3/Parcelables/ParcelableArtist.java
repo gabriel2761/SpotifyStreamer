@@ -21,7 +21,6 @@ public class ParcelableArtist implements Parcelable {
     public ParcelableArtist(Artist artist) {
         name = artist.name;
         id = artist.id;
-
         if (!artist.images.isEmpty()) {
             image = artist.images.get(0).url;
         } else {

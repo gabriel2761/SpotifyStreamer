@@ -25,9 +25,11 @@
             android:label="@string/title_activity_track" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.gabrielmojica.spotify3.MainActivity"
-                />
-
+                android:value="com.example.gabrielmojica.spotify3.MainActivity" />
+        </activity>
+        <activity
+            android:name=".PlayerActivity"
+            android:label="@string/title_activity_player" >
         </activity>
     </application>
 

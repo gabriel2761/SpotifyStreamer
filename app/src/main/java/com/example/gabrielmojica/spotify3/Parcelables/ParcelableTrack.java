@@ -12,16 +12,26 @@ public class ParcelableTrack implements Parcelable {
     public String name;
     public String album;
     public String image;
+    public String preview;
+    public String artist;
 
     public ParcelableTrack(Track track) {
         name = track.name;
         album = track.album.name;
+        preview = track.preview_url;
+
+
+        if (!track.artists.isEmpty()) {
+            artist = track.artists.get(0).name;
+        } else {
+            artist = "";
+        }
+
         if (!track.album.images.isEmpty()) {
             image = track.album.images.get(0).url;
         } else {
             image = "";
         }
-
     }
 
     public ParcelableTrack(Parcel in) {
@@ -43,7 +53,6 @@ public class ParcelableTrack implements Parcelable {
         public ParcelableTrack createFromParcel(Parcel in) {
             return new ParcelableTrack(in);
         }
-
         public ParcelableTrack[] newArray(int size) {
             return new ParcelableTrack[size];
         }
