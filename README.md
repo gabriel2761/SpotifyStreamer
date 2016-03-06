@@ -1,4 +1,7 @@
-# SpotifyStreamer
+# SpotifyStreamer (In Progress)
 Project for the Udacity Android Developer Nanodegree
 
-In progress
+### How to run
+1. Download project
+2. Open in Android Studio and run
+
